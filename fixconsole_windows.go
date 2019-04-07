@@ -2,7 +2,7 @@ package fixconsole
 
 import (
 	"fmt"
-	"github.com/AllenDang/w32"
+	"github.com/apenwarr/w32"
 	"golang.org/x/sys/windows"
 	"os"
 	"syscall"
