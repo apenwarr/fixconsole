@@ -26,6 +26,8 @@ func AttachConsole() error {
 	}
 }
 
+var oldStdin, oldStdout, oldStderr *os.File
+
 // Windows console output is a mess.
 //
 // If you compile as "-H windows", then if you launch your program without
@@ -71,6 +73,11 @@ func AttachConsole() error {
 //
 // We don't seem to make anything worse, at least.
 func FixConsoleIfNeeded() error {
+	// Retain the original console objects, to prevent Go from automatically
+	// closing their file descriptors when they get garbage collected.
+	// You never want to close file descriptors 0, 1, and 2.
+	oldStdin, oldStdout, oldStderr = os.Stdin, os.Stdout, os.Stderr
+
 	stdin, _ := syscall.GetStdHandle(syscall.STD_INPUT_HANDLE)
 	stdout, _ := syscall.GetStdHandle(syscall.STD_OUTPUT_HANDLE)
 	stderr, _ := syscall.GetStdHandle(syscall.STD_ERROR_HANDLE)
